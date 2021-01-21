@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import PreviousEpisodes from "../screens/PreviousEpisodes";
-
+import Info from "../screens/Info";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
@@ -30,6 +30,20 @@ const TabNavigation = () => (
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons
             name="database-search"
+            size={size}
+            color={color}
+          />
+        ),
+      }}
+    />
+
+    <Tab.Screen
+      name="Info"
+      component={Info}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons
+            name="information"
             size={size}
             color={color}
           />
