@@ -1,15 +1,59 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Constants, Audio } from "expo";
+import { Audio } from "expo-av";
 
-function LivePlayer({ onPress }) {
+function LivePlayer() {
+  const [sound, setSound] = useState();
+
+  const playSound = async () => {
+    try {
+      const { sound, status } = await Audio.Sound.createAsync(
+        { uri: "http://72.29.87.97:8015/stream.mp3" }
+        //require('./assets/Hello.mp3')
+      );
+
+      setSound(sound);
+      return await sound.playAsync();
+    } catch (error) {
+      Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
+    }
+  };
+
+  const pauseSound = async () => {
+    try {
+      const { sound, status } = await Audio.Sound.createAsync(
+        { uri: "http://72.29.87.97:8015/stream.mp3" }
+        //require('./assets/Hello.mp3')
+      );
+
+      setSound("");
+      return await sound.pauseAsync();
+    } catch (error) {
+      Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
+    }
+  };
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Escuchar en vivo</Text>
-      <TouchableOpacity style={styles.playButton} onPress={onPress}>
-        <MaterialCommunityIcons name="play" size={100} color="#1B4D90" />
+      <TouchableOpacity
+        style={styles.playButton}
+        onPress={sound ? pauseSound : playSound}
+      >
+        {sound ? (
+          <MaterialCommunityIcons name="pause" size={60} color="#1B4D90" />
+        ) : (
+          <MaterialCommunityIcons name="play" size={80} color="#1B4D90" />
+        )}
       </TouchableOpacity>
     </View>
   );
