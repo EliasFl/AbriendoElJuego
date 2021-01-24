@@ -1,36 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 
 function LivePlayer() {
   const [sound, setSound] = useState();
+  const [loading, setLoading] = useState(false);
+  const source = { uri: "http://72.29.87.97:8015/stream.mp3" };
 
   const playSound = async () => {
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      staysActiveInBackground: true,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+      playThroughEarpieceAndroid: false,
+    });
+
     try {
-      const { sound, status } = await Audio.Sound.createAsync(
-        { uri: "http://72.29.87.97:8015/stream.mp3" }
-        //require('./assets/Hello.mp3')
-      );
+      setLoading(true);
+      const { sound } = await Audio.Sound.createAsync(source);
+      setLoading(false);
 
       setSound(sound);
-      return await sound.playAsync();
+      return sound.playAsync();
     } catch (error) {
       Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
+      setLoading(false);
     }
   };
 
-  const pauseSound = async () => {
+  const stopSound = async () => {
     try {
-      const { sound, status } = await Audio.Sound.createAsync(
-        { uri: "http://72.29.87.97:8015/stream.mp3" }
-        //require('./assets/Hello.mp3')
-      );
+      setLoading(true);
+      const { sound } = await Audio.Sound.createAsync(source);
+      setLoading(false);
 
       setSound("");
-      return await sound.pauseAsync();
+      return sound.stopAsync();
     } catch (error) {
       Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
+      setLoading(false);
     }
   };
 
@@ -44,17 +64,34 @@ function LivePlayer() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Escuchar en vivo</Text>
-      <TouchableOpacity
-        style={styles.playButton}
-        onPress={sound ? pauseSound : playSound}
-      >
-        {sound ? (
-          <MaterialCommunityIcons name="pause" size={60} color="#1B4D90" />
-        ) : (
-          <MaterialCommunityIcons name="play" size={80} color="#1B4D90" />
-        )}
-      </TouchableOpacity>
+      {loading ? (
+        <Image
+          source={require("../assets/loading.gif")}
+          style={{ width: 100, height: 100 }}
+        />
+      ) : (
+        <View style={styles.playButton}>
+          {sound ? (
+            <Image
+              source={require("../assets/live.gif")}
+              style={{ position: "absolute" }}
+            />
+          ) : null}
+          <TouchableOpacity
+            style={styles.playButton}
+            onPress={sound ? stopSound : playSound}
+          >
+            {sound ? (
+              <MaterialCommunityIcons name="stop" size={60} color="#1B4D90" />
+            ) : (
+              <MaterialCommunityIcons name="play" size={80} color="#1B4D90" />
+            )}
+          </TouchableOpacity>
+        </View>
+      )}
+      <Text style={[styles.text, { color: sound ? "red" : "white" }]}>
+        {sound ? "On Air" : "Escuchar en vivo"}
+      </Text>
     </View>
   );
 }
@@ -72,13 +109,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 8, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
-    justifyContent: "space-evenly",
+    justifyContent: "center",
   },
   text: {
-    paddingTop: 20,
-    color: "white",
-    fontSize: 25,
-    fontWeight: "bold",
+    fontSize: 18,
+    position: "absolute",
+    bottom: 7,
   },
   playButton: {
     height: 100,
