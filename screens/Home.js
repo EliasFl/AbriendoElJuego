@@ -4,7 +4,7 @@ import LivePlayer from "../components/LivePlayer";
 
 function Home() {
   return (
-    <View style={styles.container}>
+    <View style={[StyleSheet.absoluteFillObject]}>
       <ImageBackground
         source={require("../assets/logo.png")}
         style={styles.logo}
@@ -14,9 +14,6 @@ function Home() {
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   logo: {
     flex: 0.9,
     width: "100%",

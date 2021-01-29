@@ -1,14 +1,14 @@
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React, { Component } from "react";
+import { WebView } from "react-native-webview";
 
-function Info() {
-  return (
-    <View style={styles.container}>
-      <Text>Info screen</Text>
-    </View>
-  );
+class MyInlineWeb extends Component {
+  render() {
+    return (
+      <WebView
+        originWhitelist={["*"]}
+        source={{ html: "<h1>This is a static HTML source!</h1> <p> Hola<p/>" }}
+      />
+    );
+  }
 }
-const styles = StyleSheet.create({
-  container: {},
-});
-export default Info;
+export default MyInlineWeb;

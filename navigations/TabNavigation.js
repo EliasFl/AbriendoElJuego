@@ -4,6 +4,7 @@ import Home from "../screens/Home";
 import PreviousEpisodes from "../screens/PreviousEpisodes";
 import Info from "../screens/Info";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import StackNavigator from "./StackNavigator";
 
 const Tab = createBottomTabNavigator();
 const TabNavigation = () => (
@@ -28,17 +29,13 @@ const TabNavigation = () => (
       options={{
         title: "Programas anteriores",
         tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons
-            name="database-search"
-            size={size}
-            color={color}
-          />
+          <MaterialCommunityIcons name="podcast" size={size} color={color} />
         ),
       }}
     />
 
     <Tab.Screen
-      name="Info"
+      name="Información"
       component={Info}
       options={{
         tabBarIcon: ({ color, size }) => (

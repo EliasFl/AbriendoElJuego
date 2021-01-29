@@ -1,32 +1,49 @@
 import React, { useState, useEffect } from "react";
+import firebase from "../database/firebase";
+
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
   Image,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 
 function LivePlayer() {
-  const [sound, setSound] = useState();
+  const [sound, setSound] = useState("");
   const [loading, setLoading] = useState(false);
-  const source = { uri: "http://72.29.87.97:8015/stream.mp3" };
+  const [radioStation, setRadioStation] = useState("");
+
+  useEffect(() => {
+    audioConfiguration();
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
+  const getRadioStation = async () => {
+    firebase.db.collection("radioStation").onSnapshot((querySnapshot) => {
+      querySnapshot.docs.forEach((doc) => {
+        const radioStation = doc.data().url;
+        setRadioStation(radioStation);
+      });
+    });
+  };
+
+  useEffect(() => {
+    getRadioStation();
+  }, []);
+
+  const source = {
+    uri: radioStation,
+  };
 
   const playSound = async () => {
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
-      playThroughEarpieceAndroid: false,
-    });
-
     try {
       setLoading(true);
       const { sound } = await Audio.Sound.createAsync(source);
@@ -42,10 +59,6 @@ function LivePlayer() {
 
   const stopSound = async () => {
     try {
-      setLoading(true);
-      const { sound } = await Audio.Sound.createAsync(source);
-      setLoading(false);
-
       setSound("");
       return sound.stopAsync();
     } catch (error) {
@@ -54,13 +67,17 @@ function LivePlayer() {
     }
   };
 
-  useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+  const audioConfiguration = async () => {
+    return await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      staysActiveInBackground: true,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS,
+      playsInSilentModeIOS: true,
+      shouldDuckAndroid: true,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+      playThroughEarpieceAndroid: false,
+    });
+  };
 
   return (
     <View style={styles.container}>
