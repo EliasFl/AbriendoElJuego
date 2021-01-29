@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert, FlatList } from "react-native";
 import Program from "../components/Program";
 
 import firebase from "../database/firebase";
@@ -8,7 +8,7 @@ import AppHeader from "../components/AppHeader";
 
 function PreviousEpisodes() {
   const [sound, setSound] = useState("");
-  const [program, setProgram] = useState("");
+  const [program, setProgram] = useState([]);
   const [shouldPause, setShouldPause] = useState(false);
   const [time, setTime] = useState(15000);
   const source = {
@@ -18,7 +18,7 @@ function PreviousEpisodes() {
   useEffect(() => {
     audioConfiguration();
     getProgram();
-  }, [program]);
+  }, []);
 
   const audioConfiguration = async () => {
     return await Audio.setAudioModeAsync({
@@ -34,21 +34,22 @@ function PreviousEpisodes() {
 
   const getProgram = () => {
     firebase.db.collection("programs").onSnapshot((data) => {
-      data.docs.forEach((program) => {
+      const previousPrograms = [];
+      data.docs.forEach((program, index) => {
         const url = program.data().url;
-        setProgram(url);
+        const date = program.data().date;
+        previousPrograms.push({ id: index + 1, program: url, date });
       });
+      setProgram(previousPrograms.reverse());
     });
   };
 
-  const playProgram = async () => {
+  const playProgram = async (source) => {
     try {
       if (!shouldPause) {
         const { sound } = await Audio.Sound.createAsync(source);
         setSound(sound);
         setShouldPause(true);
-        console.log(source);
-
         return sound.playAsync();
       } else {
         return sound.playAsync();
@@ -56,7 +57,6 @@ function PreviousEpisodes() {
     } catch (error) {
       Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
     }
-    console.log("ss");
   };
 
   const pauseProgram = async () => {
@@ -84,17 +84,27 @@ function PreviousEpisodes() {
   };
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <AppHeader text="Podcast" />
-      <View style={styles.container}>
-        <Program
-          onPlay={playProgram}
-          onPause={pauseProgram}
-          move={forwardProgramTime}
-          back={backwardProgramTime}
-        />
-      </View>
-    </>
+
+      <FlatList
+        data={source.uri}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.container}>
+              <Program
+                onPlay={() => playProgram({ uri: item.program })}
+                onPause={pauseProgram}
+                move={forwardProgramTime}
+                back={backwardProgramTime}
+                programDate={item.date}
+              />
+            </View>
+          );
+        }}
+      />
+    </View>
   );
 }
 const styles = StyleSheet.create({

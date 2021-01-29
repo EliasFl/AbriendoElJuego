@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-function Program({ date, onPlay, onPause, move, back }) {
+function Program({ date, onPlay, onPause, move, back, programDate }) {
   return (
     <View style={styles.container}>
       <View>
@@ -16,7 +16,7 @@ function Program({ date, onPlay, onPause, move, back }) {
 
       <View style={styles.information}>
         <Text style={styles.text}>Abriendo el Juego</Text>
-        <Text style={styles.text}>Martes 26 de Enero</Text>
+        <Text style={styles.text}>{programDate}</Text>
         <Text>{date}</Text>
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity onPress={back}>
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+    flex: 1,
   },
-  information: {},
   podcastContainer: {
     alignItems: "center",
     flexDirection: "row",

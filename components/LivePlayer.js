@@ -48,7 +48,7 @@ function LivePlayer() {
       setLoading(true);
       const { sound } = await Audio.Sound.createAsync(source);
       setLoading(false);
-
+      console.log(source);
       setSound(sound);
       return sound.playAsync();
     } catch (error) {
