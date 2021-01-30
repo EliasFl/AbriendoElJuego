@@ -9,15 +9,6 @@ import Screen from "./components/Screen";
 //const source = "http://72.29.87.97:8015/stream.mp3";
 
 export default function App() {
-  const play = () => {
-    Audio.setAudioModeAsync({
-      staysActiveInBackground: true,
-    });
-    const sound = new Audio.Sound();
-    sound.loadAsync({ uri: "http://72.29.87.97:8015/stream.mp3" });
-    sound.playAsync();
-  };
-
   return (
     <Screen style={styles.container}>
       <NavigationContainer>
