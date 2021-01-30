@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
 import { Audio } from "expo-av";
 import { NavigationContainer } from "@react-navigation/native";
-import LivePlayer from "./components/LivePlayer";
 import TabNavigation from "./navigations/TabNavigation";
 import Screen from "./components/Screen";
 

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import firebase from "../database/firebase";
-
 import {
   View,
   StyleSheet,
@@ -11,11 +9,12 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
+import useRadioStation from "../Hooks/useRadioStation";
 
 function LivePlayer() {
+  const radioStation = useRadioStation();
   const [sound, setSound] = useState("");
   const [loading, setLoading] = useState(false);
-  const [radioStation, setRadioStation] = useState("");
 
   useEffect(() => {
     audioConfiguration();
@@ -26,19 +25,6 @@ function LivePlayer() {
       : undefined;
   }, [sound]);
 
-  const getRadioStation = async () => {
-    firebase.db.collection("radioStation").onSnapshot((querySnapshot) => {
-      querySnapshot.docs.forEach((doc) => {
-        const radioStation = doc.data().url;
-        setRadioStation(radioStation);
-      });
-    });
-  };
-
-  useEffect(() => {
-    getRadioStation();
-  }, []);
-
   const source = {
     uri: radioStation,
   };
@@ -48,7 +34,6 @@ function LivePlayer() {
       setLoading(true);
       const { sound } = await Audio.Sound.createAsync(source);
       setLoading(false);
-      console.log(source);
       setSound(sound);
       return sound.playAsync();
     } catch (error) {
