@@ -8,7 +8,7 @@ function Home() {
       <ImageBackground
         source={require("../assets/logo.png")}
         style={styles.logo}
-      ></ImageBackground>
+      />
       <LivePlayer />
     </View>
   );

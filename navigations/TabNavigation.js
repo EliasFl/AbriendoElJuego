@@ -27,7 +27,7 @@ const TabNavigation = () => (
       name="PreviousEpisodes"
       component={PreviousEpisodes}
       options={{
-        title: "Programas anteriores",
+        title: "Podcast",
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="podcast" size={size} color={color} />
         ),

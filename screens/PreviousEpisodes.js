@@ -1,36 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Alert, FlatList } from "react-native";
-import Program from "../components/Program";
-
+import { View, StyleSheet, Image, Text, LogBox } from "react-native";
+import { WebView } from "react-native-webview";
 import firebase from "../database/firebase";
-import { Audio } from "expo-av";
 import AppHeader from "../components/AppHeader";
 
+LogBox.ignoreLogs(["Setting a timer"]);
+console.warn = (message) => {
+  if (message.indexOf("Setting a timer") <= -1) {
+    console.warn(message);
+  }
+};
+
 function PreviousEpisodes() {
-  const [sound, setSound] = useState("");
   const [program, setProgram] = useState([]);
-  const [shouldPause, setShouldPause] = useState(false);
-  const [time, setTime] = useState(15000);
-  const source = {
-    uri: program,
-  };
+  const [programDate, setProgramDate] = useState("");
 
   useEffect(() => {
-    audioConfiguration();
     getProgram();
-  }, []);
-
-  const audioConfiguration = async () => {
-    return await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DUCK_OTHERS,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
-      playThroughEarpieceAndroid: false,
-    });
-  };
+  }, [program]);
 
   const getProgram = () => {
     firebase.db.collection("programs").onSnapshot((data) => {
@@ -38,80 +25,70 @@ function PreviousEpisodes() {
       data.docs.forEach((program, index) => {
         const url = program.data().url;
         const date = program.data().date;
-        previousPrograms.push({ id: index + 1, program: url, date });
+        previousPrograms.push({ id: index + 1, url, date });
       });
-      setProgram(previousPrograms.reverse());
+      setProgram(previousPrograms[0].url);
+      setProgramDate(previousPrograms[0].date);
     });
   };
 
-  const playProgram = async (source) => {
-    try {
-      if (!shouldPause) {
-        const { sound } = await Audio.Sound.createAsync(source);
-        setSound(sound);
-        setShouldPause(true);
-        return sound.playAsync();
-      } else {
-        return sound.playAsync();
-      }
-    } catch (error) {
-      Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
-    }
-  };
-
-  const pauseProgram = async () => {
-    try {
-      sound.pauseAsync();
-    } catch (error) {
-      Alert.alert("Error", "Intenta nuevamente", [{ text: "Ok" }]);
-    }
-  };
-
-  const forwardProgramTime = () => {
-    const myTime = time + 15000;
-    setTime(myTime);
-    sound.setPositionAsync(myTime);
-  };
-
-  const backwardProgramTime = () => {
-    if (time != 0) {
-      const myTime = time - 15000;
-      setTime(myTime);
-      sound.setPositionAsync(myTime);
-    } else {
-      sound.setPositionAsync(time);
-    }
-  };
-
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <AppHeader text="Podcast" />
+      <Image source={require("../assets/logo.png")} style={styles.logo} />
 
-      <FlatList
-        data={source.uri}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => {
-          return (
-            <View style={styles.container}>
-              <Program
-                onPlay={() => playProgram({ uri: item.program })}
-                onPause={pauseProgram}
-                move={forwardProgramTime}
-                back={backwardProgramTime}
-                programDate={item.date}
-              />
-            </View>
-          );
+      <WebView
+        source={{
+          html: `
+          <h1 style="text-align:center;font-size: 50;color: #1B4D90;">${programDate}</h1>
+          <p align="center">
+          <iframe id="audioplayer" 
+          style="
+          height:300px;
+          width:99%;
+          border:5px solid #1B4D90;
+          frameborder="1";
+          src=${program}></iframe>
+          </p>`,
         }}
       />
+      <View style={styles.textProvider}>
+        <Text style={{ color: "#0DBAD2" }}>Podcast provided by</Text>
+      </View>
+
+      <View style={styles.imageProviderContainer}>
+        <Image
+          source={require("../assets/domiplayIsotipo.png")}
+          style={{ width: 30, height: 30 }}
+        />
+        <Image
+          source={require("../assets/domiplayLogo.png")}
+          style={{ width: 130, height: 30 }}
+        />
+      </View>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  logo: {
+    width: 100,
+    height: 100,
+    alignSelf: "center",
+    zIndex: 1,
+  },
   container: {
     flex: 1,
+    backgroundColor: "white",
+  },
+  imageProviderContainer: {
     alignItems: "center",
-    margin: 12,
+    flexDirection: "row",
+    justifyContent: "center",
+    bottom: 10,
+  },
+  textProvider: {
+    alignItems: "center",
+    bottom: 20,
   },
 });
 export default PreviousEpisodes;

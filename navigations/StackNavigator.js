@@ -16,23 +16,9 @@ import {
 const Stack = createStackNavigator();
 
 const StackNavigator = ({ navigation }) => (
-  <Stack.Navigator
-    screenOptions={{
-      headerTintColor: "#1B4D90",
-      headerLeft: ({ onPress }) => (
-        <Button title="Regresar" onPress={() => navigation.navigate("Home")} />
-      ),
-    }}
-  >
-    <Stack.Screen
-      name="Podcast"
-      component={PreviousEpisodes}
-      options={{
-        title: "ajis",
-        headerStyle: { backgroundColor: "white" },
-        headerTitleAlign: "center",
-      }}
-    />
+  <Stack.Navigator>
+    <Stack.Screen name="Podcast" component={PreviousEpisodes} />
+    <Stack.Screen name="Information" component={Info} />
   </Stack.Navigator>
 );
 
