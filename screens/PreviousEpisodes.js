@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, StyleSheet, Image, Text, LogBox } from "react-native";
 import { WebView } from "react-native-webview";
-import firebase from "../database/firebase";
 import AppHeader from "../components/AppHeader";
+import useProgram from "../Hooks/useProgram";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 console.warn = (message) => {
@@ -12,25 +12,8 @@ console.warn = (message) => {
 };
 
 function PreviousEpisodes() {
-  const [program, setProgram] = useState([]);
-  const [programDate, setProgramDate] = useState("");
+  const { program, programDate } = useProgram();
   const [charged, setCharged] = useState(false);
-  useEffect(() => {
-    getProgram();
-  }, [program]);
-
-  const getProgram = () => {
-    firebase.db.collection("programs").onSnapshot((data) => {
-      const previousPrograms = [];
-      data.docs.forEach((program, index) => {
-        const url = program.data().url;
-        const date = program.data().date;
-        previousPrograms.push({ id: index + 1, url, date });
-      });
-      setProgram(previousPrograms[0].url);
-      setProgramDate(previousPrograms[0].date);
-    });
-  };
 
   return (
     <View style={styles.container}>
