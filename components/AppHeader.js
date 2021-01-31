@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 20,
+    fontSize: 22,
+    fontWeight: "500",
   },
 });
 export default AppHeader;

@@ -1,6 +1,5 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
 import PreviousEpisodes from "../screens/PreviousEpisodes";
 import Info from "../screens/Info";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,7 +15,7 @@ const TabNavigation = () => (
   >
     <Tab.Screen
       name="Home"
-      component={Home}
+      component={StackNavigator}
       options={{
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="home" size={size} color={color} />
