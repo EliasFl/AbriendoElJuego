@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Image } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { colors } from "../utils/AppColors";
 
 function Program({ date, onPlay, onPause, move, back, programDate }) {
   return (
@@ -20,25 +21,41 @@ function Program({ date, onPlay, onPause, move, back, programDate }) {
         <Text>{date}</Text>
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity onPress={back}>
-            <MaterialCommunityIcons name="play" size={50} color="#1B4D90" />
+            <MaterialCommunityIcons
+              name="play"
+              size={50}
+              color={colors.principalBlue}
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={move}>
-            <MaterialCommunityIcons name="pause" size={50} color="#1B4D90" />
+            <MaterialCommunityIcons
+              name="pause"
+              size={50}
+              color={colors.principalBlue}
+            />
           </TouchableOpacity>
         </View>
       </View>
       <TouchableOpacity onPress={onPlay}>
-        <MaterialCommunityIcons name="play" size={50} color="#1B4D90" />
+        <MaterialCommunityIcons
+          name="play"
+          size={50}
+          color={colors.principalBlue}
+        />
       </TouchableOpacity>
       <TouchableOpacity onPress={onPause}>
-        <MaterialCommunityIcons name="pause" size={50} color="#1B4D90" />
+        <MaterialCommunityIcons
+          name="pause"
+          size={50}
+          color={colors.principalBlue}
+        />
       </TouchableOpacity>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: colors.white,
     width: "100%",
     height: "25%",
     borderRadius: 25,

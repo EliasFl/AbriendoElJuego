@@ -4,12 +4,13 @@ import PreviousEpisodes from "../screens/PreviousEpisodes";
 import Info from "../screens/Info";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import StackNavigator from "./StackNavigator";
+import { colors } from "../utils/AppColors";
 
 const Tab = createBottomTabNavigator();
 const TabNavigation = () => (
   <Tab.Navigator
     tabBarOptions={{
-      activeTintColor: "#1B4D90",
+      activeTintColor: colors.principalBlue,
       labelStyle: { fontWeight: "bold" },
     }}
   >

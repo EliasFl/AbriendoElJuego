@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { colors } from "../utils/AppColors";
 
 function HostCard({ host, onTwitter, onInstagram, onYouTube }) {
   return (
@@ -18,7 +19,7 @@ function HostCard({ host, onTwitter, onInstagram, onYouTube }) {
             <MaterialCommunityIcons
               name="twitter"
               size={30}
-              color="#1B4D90"
+              color={colors.principalBlue}
               style={{ paddingRight: 15 }}
             />
           </TouchableOpacity>
@@ -27,13 +28,17 @@ function HostCard({ host, onTwitter, onInstagram, onYouTube }) {
             <MaterialCommunityIcons
               name="instagram"
               size={30}
-              color="#1B4D90"
+              color={colors.principalBlue}
               style={{ paddingRight: 15 }}
             />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={onYouTube}>
-            <MaterialCommunityIcons name="youtube" size={30} color="#1B4D90" />
+            <MaterialCommunityIcons
+              name="youtube"
+              size={30}
+              color={colors.principalBlue}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -43,11 +48,11 @@ function HostCard({ host, onTwitter, onInstagram, onYouTube }) {
 const styles = StyleSheet.create({
   container: {
     margin: 10,
-    backgroundColor: "white",
+    backgroundColor: colors.white,
     borderRadius: 20,
     flexDirection: "row",
     height: 120,
-    shadowColor: "#1B4D90",
+    shadowColor: colors.principalBlue,
     shadowOffset: {
       width: 0,
       height: 10,
@@ -61,18 +66,18 @@ const styles = StyleSheet.create({
     width: 80,
     borderRadius: 50,
     marginLeft: 10,
-    borderColor: "#1B4D90",
+    borderColor: colors.principalBlue,
     borderWidth: 0.1,
     alignSelf: "center",
   },
   hostName: {
     fontSize: 20,
-    color: "#1B4D90",
+    color: colors.principalBlue,
     fontWeight: "500",
   },
   verticalLine: {
     width: 0.3,
-    backgroundColor: "#1B4D90",
+    backgroundColor: colors.principalBlue,
     margin: 20,
   },
   nameAndSocialContainer: { justifyContent: "space-evenly" },

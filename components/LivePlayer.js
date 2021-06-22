@@ -10,6 +10,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import useRadioStation from "../Hooks/useRadioStation";
+import { colors } from "../utils/AppColors";
 
 function LivePlayer() {
   const radioStation = useRadioStation();
@@ -33,6 +34,7 @@ function LivePlayer() {
     try {
       setLoading(true);
       const { sound } = await Audio.Sound.createAsync(source);
+
       setLoading(false);
       setSound(sound);
       return sound.playAsync();
@@ -84,14 +86,22 @@ function LivePlayer() {
             onPress={sound ? stopSound : playSound}
           >
             {sound ? (
-              <MaterialCommunityIcons name="stop" size={60} color="#1B4D90" />
+              <MaterialCommunityIcons
+                name="stop"
+                size={60}
+                color={colors.principalBlue}
+              />
             ) : (
-              <MaterialCommunityIcons name="play" size={80} color="#1B4D90" />
+              <MaterialCommunityIcons
+                name="play"
+                size={80}
+                color={colors.principalBlue}
+              />
             )}
           </TouchableOpacity>
         </View>
       )}
-      <Text style={[styles.text, { color: sound ? "red" : "white" }]}>
+      <Text style={[styles.text, { color: sound ? colors.red : colors.white }]}>
         {sound ? "On Air" : "Escuchar en vivo"}
       </Text>
     </View>
@@ -99,7 +109,7 @@ function LivePlayer() {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#1B4D90",
+    backgroundColor: colors.principalBlue,
     height: "35%",
     width: "100%",
     borderTopStartRadius: 120,
@@ -122,7 +132,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 150,
-    backgroundColor: "white",
+    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
   },
