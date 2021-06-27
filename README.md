@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/Jonathanfd/AbriendoElJuego"><img src="/assets/logo.png" width="450"></a></p> 
+<p align="center"><a href="https://github.com/Jonathanfd/AbriendoElJuego"><img src="/assets/logo.png" width="350"></a></p> 
 <h2 align="center"><b>Abriendo el Juego</b></h2>
 <h4 align="center">[TODO: colocar breve descripcion de la aplicacion. Coordinar]</h4>
 <p align="center">
